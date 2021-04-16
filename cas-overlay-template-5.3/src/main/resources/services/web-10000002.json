@@ -1,0 +1,18 @@
+// json 配置 name-id.json
+{
+  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId" : "^(http)://192.168.0.239:8084.*",
+  "name" : "web",
+  "id" : 10000002,
+  "evaluationOrder" : 10,
+  "accessStrategy" : {
+    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "enabled" : true,
+    "ssoEnabled" : true
+  },
+  //返回客户端所有信息(自义定认证策略返回属性需配置)
+  "attributeReleasePolicy" : {
+    "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  },
+  "theme": "theme1" //主题
+}

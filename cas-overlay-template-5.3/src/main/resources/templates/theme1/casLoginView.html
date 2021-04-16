@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>单点登录SSO</title>
+    <link rel="stylesheet" type="text/css" href="themes/theme1/css/zui.css" media="all">
+    <link rel="stylesheet" type="text/css" href="themes/theme1/css/login.css" media="all">
+    <link href="themes/theme1/css/animate.min.css" rel="stylesheet">
+    <link href="themes/theme1/css/font-awesome.min.css" rel="stylesheet">
+    <script type="text/javascript" src="themes/theme1/js/code.js" ></script>
+    <style> body { background-image: url(themes/theme1/images/background.jpg);}</style>
+</head>
+<style>
+    .form-kaptcha{
+        position: relative;
+        z-index: 2;
+        float: right;
+        /* width: 100%; */
+        margin-bottom: 0;
+    }
+</style>
+<body>
+<div id="main-box"></div>
+<div id="main-content">
+    <div class="login-body  animated fadeInLeft">
+        <div class="login-main pr">
+            <form method="post" class="login-form" th:object="${credential}">
+                <h3> 管理中心 </h3>
+                <h5 style="padding-bottom: 10px"> System Management Center </h5>
+                <!-- 账号登陆 -->
+
+
+                <div id="MobileBox" class="item-box"  >
+                    <div class="input-group user-name" th:unless="${openIdLocalId}">
+                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                        <input class="form-control required"
+                               id="username"
+                               size="25"
+                               tabindex="1"
+                               placeholder="用户名"
+                               type="text"
+                               th:disabled="${guaEnabled}"
+                               th:field="*{username}"
+                               th:accesskey="#{screen.welcome.label.netid.accesskey}"
+                               autocomplete="off">
+                    </div>
+
+                    <div class="input-group password">
+                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                        <input
+                                class="form-control required"
+                                type="password"
+                                id="password"
+                                size="25"
+                                tabindex="2"
+                                placeholder="密码"
+                                th:accesskey="#{screen.welcome.label.password.accesskey}"
+                                th:field="*{password}"
+                                autocomplete="off">
+                    </div>
+
+                    <div class="input-group">
+                        <img id="kaptcha_img" title="点击更换验证码" th:src="@{/kaptcha}" onclick="changeCode()" />
+                        <input
+                                class="form-kaptcha"
+                                placeholder="请输入验证码"
+                                type="text"
+                                id="code"
+                                th:field="*{kaptcha}"
+                        >
+                    </div>
+
+                    <section class="login_btn_panel">
+                        <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                        <input type="hidden" name="_eventId" value="submit"/>
+                        <input type="hidden" name="geolocation"/>
+                        <input class="btn btn-primary btn-block btn-lg"
+                                name="submit"
+                                accesskey="l"
+                                th:value="#{screen.welcome.button.login}"
+                                tabindex="6"
+                                type="submit"/>
+                        <!--<div class="check-tips"></div>-->
+                    </section>
+
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                        <span th:each="err : ${#fields.errors('*')}" th:utext="${err}">Example error</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
