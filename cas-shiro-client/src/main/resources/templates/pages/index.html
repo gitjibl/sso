@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>cas-shiro-client</title>
+</head>
+<body>
+<div style="text-align: center">
+    <h1>hello cas-shiro-client</h1>
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-primary" style="width: 100%">
+                <div class="panel-heading">
+                    <h3 class="panel-title">权限列表</h3>
+                    <th colspan='2' th:text="'登录用户:' + ${user.profile.id}"></th>
+                    </span><a th:href="@{/logout}"><span style="color: crimson">退出</span></a>
+                </div>
+                <div class="panel-body">
+                    <table data-toggle="table">
+                        <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Roles</th>
+                            <th>Permissions</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>管理员</td>
+                            <td>admin</td>
+                            <th>
+                                <button type="button" onclick="testClick(1)" class="btn btn-success btn-sm">测试</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>测试用户</td>
+                            <td>test</td>
+                            <th>
+                                <button type="button" onclick="testClick(2)" class="btn btn-success btn-sm">测试</button>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/index.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<script>
+
+</script>
+</body>
+</html>
