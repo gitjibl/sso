@@ -3,6 +3,7 @@ package com.example.casshiroclient.config;
 import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.cas.config.CasProtocol;
+import org.pac4j.cas.logout.DefaultCasLogoutHandler;
 import org.pac4j.core.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -82,6 +83,10 @@ public class Pac4jConfig {
         configuration.setProtocol(CasProtocol.CAS30);
         configuration.setAcceptAnyProxy(true);
         configuration.setPrefixUrl(casServerUrl + "/");
+        //监控CAS服务端登出，登出后销毁本地session实现双向登出
+        DefaultCasLogoutHandler logoutHandler = new DefaultCasLogoutHandler();
+        logoutHandler.setDestroySession(true);
+        configuration.setLogoutHandler(logoutHandler);
         return configuration;
     }
 

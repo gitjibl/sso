@@ -110,7 +110,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/index", "securityFilter");
         filterChainDefinitionMap.put("/callback", "callbackFilter");
         filterChainDefinitionMap.put("/logout", "logout");
-        filterChainDefinitionMap.put("/**","anon");
+        //anon 无需认证即可访问
+        //authc 需要认证才可访问
+        filterChainDefinitionMap.put("/**","authc");
         // filterChainDefinitionMap.put("/user/edit/**", "authc,perms[user:edit]");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
@@ -127,9 +129,6 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        //shiroFilterFactoryBean.setUnauthorizedUrl("/403");
-        // 添加casFilter到shiroFilter中
-        loadShiroFilterChain(shiroFilterFactoryBean);
         Map<String, Filter> filters = new HashMap<>(3);
         //cas 资源认证拦截器
         SecurityFilter securityFilter = new SecurityFilter();
@@ -149,6 +148,9 @@ public class ShiroConfig {
         logoutFilter.setDefaultUrl(projectUrl + "/callback?client_name=" + clientName);
         filters.put("logout",logoutFilter);
         shiroFilterFactoryBean.setFilters(filters);
+        // 添加casFilter到shiroFilter中
+        loadShiroFilterChain(shiroFilterFactoryBean);
+        shiroFilterFactoryBean.setLoginUrl(projectUrl);
         return shiroFilterFactoryBean;
     }
 
@@ -163,7 +165,7 @@ public class ShiroConfig {
      */
     @Bean
     public SimpleCookie sessionIdCookie(){
-        SimpleCookie cookie = new SimpleCookie("sid");
+        SimpleCookie cookie = new SimpleCookie("jsessionid");
         cookie.setMaxAge(-1);
         cookie.setPath("/");
         cookie.setHttpOnly(false);
