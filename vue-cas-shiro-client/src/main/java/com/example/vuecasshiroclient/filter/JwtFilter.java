@@ -30,32 +30,16 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        //判断请求的请求头是否带上 "token"
-        if (isLoginAttempt(request, response)) {
-            //如果存在，则进入 executeLogin 方法执行登入，检查 token 是否正确
-            try {
-                executeLogin(request, response);
-                return true;
-            } catch (Exception e) {
-                // 验证错误！
-                Result.PrintWriterResult(request,response,e.getMessage());
-                return false;
-            }
+        try {
+            executeLogin(request, response);
+            return true;
+        } catch (Exception e) {
+            // 验证错误！
+            Result.PrintWriterResult(request, response, e.getMessage());
+            return false;
         }
-        //如果请求头不存在 token，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
-        return true;
     }
 
-    /**
-     * 判断用户是否想要登入。
-     * 检测 header 里面是否包含 token 字段
-     */
-    @Override
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getHeader(CommonConstant.ACCESS_TOKEN);
-        return token != null;
-    }
     /**
      * 执行登陆
      */

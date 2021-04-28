@@ -32,7 +32,7 @@ public class LoginController {
     @GetMapping({"/", "", "/index"})
     public void login(HttpServletRequest request, HttpServletResponse response) throws ClassCastException {
         Pac4jPrincipal principal = (Pac4jPrincipal)request.getUserPrincipal();
-//        String userId = (String)principal.getProfile().getAttribute("uid");
+        String userId = (String)principal.getProfile().getAttribute("username");
         List<CommonProfile> profiles = principal.getProfiles();
         Map<String, Object> attributes = profiles.get(0).getAttributes();
         String username = attributes.get("username").toString();
@@ -45,7 +45,6 @@ public class LoginController {
         String token = JwtUtil.sign(username, pwd);
         // 将签发的 JWT token 设置到 HttpServletResponse 的 Header中,并重写向vue前端页面
         ((HttpServletResponse) response).setHeader(CommonConstant.ACCESS_TOKEN, token);
-        // response.sendRedirect("http://192.168.0.41:8088/#/stats/casindex?token=" + token);
 //        try {
 //            response.sendRedirect("http://192.168.0.41:8088/#/stats/casindex");
 //        } catch (IOException e) {

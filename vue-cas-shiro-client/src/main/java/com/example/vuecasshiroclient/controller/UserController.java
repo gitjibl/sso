@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: 1.0
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @RequestMapping("/getUserInfos")
     @RequiresRoles("admin")

@@ -60,7 +60,6 @@ public class CasRealm extends Pac4jRealm {
             final Pac4jPrincipal principal = new Pac4jPrincipal(commonProfileList, getPrincipalNameAttribute());
             final PrincipalCollection principalCollection = new SimplePrincipalCollection(principal, getName());
             return new SimpleAuthenticationInfo(principalCollection, commonProfileList.hashCode());
-            //return new SimpleAuthenticationInfo(t, t, "kb_shiro_realm");
 
         } else {
             // 这里的 token是从 JWTFilter 的 executeLogin 方法传递过来的
@@ -75,7 +74,6 @@ public class CasRealm extends Pac4jRealm {
             if (!JwtUtil.verify(token, username, user.getPassword())) {
                 throw new AuthenticationException("token校验不通过");
             }
-
             return new SimpleAuthenticationInfo(token, token, getName());
         }
     }

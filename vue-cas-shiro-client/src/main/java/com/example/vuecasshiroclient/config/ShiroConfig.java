@@ -148,11 +148,13 @@ public class ShiroConfig {
     private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean) {
         /*下面这些规则配置最好配置到配置文件中 */
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        //cas 资源认证拦截器
         filterChainDefinitionMap.put("/", "securityFilter");
         filterChainDefinitionMap.put("/ssoLogin", "securityFilter");
-        filterChainDefinitionMap.put("/index", "securityFilter");
+//        filterChainDefinitionMap.put("/*", "securityFilter");
         filterChainDefinitionMap.put("/callback/**", "callbackFilter");
         filterChainDefinitionMap.put("/ssoLogout", "ssoLogoutFilter");
+        filterChainDefinitionMap.put("/user/test", "anon");
         filterChainDefinitionMap.put("/**", "jwt");    //使用自己的过滤器
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
