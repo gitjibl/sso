@@ -113,7 +113,6 @@ public class ShiroConfig {
         //anon 无需认证即可访问
         //authc 需要认证才可访问
         filterChainDefinitionMap.put("/**","authc");
-        // filterChainDefinitionMap.put("/user/edit/**", "authc,perms[user:edit]");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
 
