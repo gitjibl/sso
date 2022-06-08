@@ -4,12 +4,17 @@ import com.example.vuecasshiroclient.constant.CommonConstant;
 import com.example.vuecasshiroclient.entity.JwtToken;
 import com.example.vuecasshiroclient.util.JwtUtil;
 import io.buji.pac4j.subject.Pac4jPrincipal;
+import org.jasig.cas.client.util.AbstractCasFilter;
+import org.jasig.cas.client.validation.Assertion;
 import org.pac4j.core.profile.CommonProfile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 
@@ -23,14 +28,27 @@ import java.util.*;
  * @Version: 1.0
  */
 @RestController
+@CrossOrigin
 public class LoginController {
 
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private HttpServletResponse response;
     /**
      * 登录认证
      * @return 登录结果
      */
-    @GetMapping({"/", "", "/index"})
-    public void login(HttpServletRequest request, HttpServletResponse response) throws ClassCastException {
+    @GetMapping({"/ssoLogin"})
+    public void ssoLogin()  {
+        // 将签发的 JWT token 设置到 HttpServletResponse 的 Header中,并重写向vue前端页面
+        //response.setHeader(CommonConstant.ACCESS_TOKEN, token);
+    }
+    @GetMapping({"/redirect"})
+    public void redirect(String url) {
+        HttpSession session = request.getSession();
+        Assertion assertion = (Assertion) session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION);
         Pac4jPrincipal principal = (Pac4jPrincipal)request.getUserPrincipal();
         String userId = (String)principal.getProfile().getAttribute("username");
         List<CommonProfile> profiles = principal.getProfiles();
@@ -44,12 +62,12 @@ public class LoginController {
         String pwd = "jibl";
         String token = JwtUtil.sign(username, pwd);
         // 将签发的 JWT token 设置到 HttpServletResponse 的 Header中,并重写向vue前端页面
-        ((HttpServletResponse) response).setHeader(CommonConstant.ACCESS_TOKEN, token);
-//        try {
-//            response.sendRedirect("http://192.168.0.41:8088/#/stats/casindex");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        response.setHeader(CommonConstant.ACCESS_TOKEN, token);
+        try {
+            response.sendRedirect(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

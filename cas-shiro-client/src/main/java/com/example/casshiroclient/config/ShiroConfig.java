@@ -106,6 +106,7 @@ public class ShiroConfig {
         /*下面这些规则配置最好配置到配置文件中 */
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         filterChainDefinitionMap.put("/", "securityFilter");
+        filterChainDefinitionMap.put("/ssoLogin", "securityFilter");
         filterChainDefinitionMap.put("/application/**", "securityFilter");
         filterChainDefinitionMap.put("/index", "securityFilter");
         filterChainDefinitionMap.put("/callback", "callbackFilter");
@@ -128,7 +129,7 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String, Filter> filters = new HashMap<>(3);
+        Map<String, Filter> filters = new HashMap<>();
         //cas 资源认证拦截器
         SecurityFilter securityFilter = new SecurityFilter();
         securityFilter.setConfig(config);

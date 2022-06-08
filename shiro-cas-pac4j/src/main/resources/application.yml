@@ -1,0 +1,27 @@
+server:
+  port: 8011
+
+spring:
+  http:
+    encoding:
+    charset: UTF-8
+    enabled: true
+    force: true
+    mail:
+      default-encoding: UTF-8
+    messages:
+      encoding: UTF-8
+
+casServerUrlPrefix: http://192.168.0.247:8088/cas
+cas:
+  prefixUrl: http://192.168.0.247:8088/cas
+  loginUrl: ${cas.prefixUrl}/login
+  logoutUrl: ${cas.prefixUrl}/logout
+  serviceUrl: http://192.168.0.247:${server.port}
+  callbackUrl: ${cas.serviceUrl}/callback
+jwt:
+  salt: cas
+
+debug: true
+
+

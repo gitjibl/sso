@@ -1,7 +1,7 @@
 // json 配置 name-id.json
 {
   "@class" : "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId" : "^(http)://192.168.0.244:8010.*",
+  "serviceId" : "^(http)://192.168.0.113:8010.*",
   "name" : "web",
   "id" : 10000001,
   "evaluationOrder" : 10,

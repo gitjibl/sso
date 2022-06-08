@@ -4,8 +4,10 @@ import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.redirect.RedirectAction;
 import org.pac4j.core.util.CommonHelper;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @ProjectName: cas-shiro-client
@@ -17,6 +19,10 @@ import org.pac4j.core.util.CommonHelper;
  * @Version: 1.0
  */
 public class CasClient extends org.pac4j.cas.client.CasClient {
+
+    @Value("${cas.server.url}")
+    private String casServerUrl;
+
     public CasClient() {
         super();
     }

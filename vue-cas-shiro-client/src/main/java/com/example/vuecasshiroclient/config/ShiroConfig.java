@@ -59,8 +59,6 @@ public class ShiroConfig {
     private String clientName;
 
 
-
-
     /**
      * 单点登出的listener
      *
@@ -147,16 +145,17 @@ public class ShiroConfig {
      */
     private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean) {
         /*下面这些规则配置最好配置到配置文件中 */
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        Map<String, String> filterMap = new LinkedHashMap<>();
         //cas 资源认证拦截器
-        filterChainDefinitionMap.put("/", "securityFilter");
-        filterChainDefinitionMap.put("/ssoLogin", "securityFilter");
-//        filterChainDefinitionMap.put("/*", "securityFilter");
-        filterChainDefinitionMap.put("/callback/**", "callbackFilter");
-        filterChainDefinitionMap.put("/ssoLogout", "ssoLogoutFilter");
-        filterChainDefinitionMap.put("/user/test", "anon");
-        filterChainDefinitionMap.put("/**", "jwt");    //使用自己的过滤器
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        filterMap.put("/ssoLogin", "securityFilter");
+        filterMap.put("/", "securityFilter");
+        filterMap.put("/callback/**", "callbackFilter");
+        filterMap.put("/ssoLogout", "ssoLogoutFilter");
+        filterMap.put("/user/test", "anon");
+        //使用自己的过滤器
+        filterMap.put("/redirect", "anon");
+        filterMap.put("/**", "jwt");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
     }
 
 
@@ -172,10 +171,7 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        //shiroFilterFactoryBean.setUnauthorizedUrl("/403");
-        // 添加casFilter到shiroFilter中
-        loadShiroFilterChain(shiroFilterFactoryBean);
-        Map<String, Filter> filters = new HashMap<>(4);
+        Map<String, Filter> filters = new HashMap<>();
         //cas 资源认证拦截器
         SecurityFilter securityFilter = new SecurityFilter();
         securityFilter.setConfig(config);
@@ -186,9 +182,6 @@ public class ShiroConfig {
         callbackFilter.setConfig(config);
         callbackFilter.setDefaultUrl(projectUrl);
         filters.put("callbackFilter", callbackFilter);
-
-        //验证请求拦截器
-        filters.put("jwt", new JwtFilter());    //添加自己的过滤器
         // 注销 拦截器
         LogoutFilter logoutFilter = new LogoutFilter();
         logoutFilter.setConfig(config);
@@ -196,7 +189,12 @@ public class ShiroConfig {
         logoutFilter.setLocalLogout(true);
         logoutFilter.setDefaultUrl(projectUrl + "/callback?client_name=" + clientName);
         filters.put("ssoLogoutFilter", logoutFilter);
+        //验证请求拦截器
+        //添加自己的过滤器
+        filters.put("jwt", new JwtFilter());
         shiroFilterFactoryBean.setFilters(filters);
+        // 添加casFilter到shiroFilter中
+        loadShiroFilterChain(shiroFilterFactoryBean);
         return shiroFilterFactoryBean;
     }
 

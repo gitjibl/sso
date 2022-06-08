@@ -1,11 +1,14 @@
 package com.example.vuecasshiroclient.config;
 
+import com.example.vuecasshiroclient.constant.CommonConstant;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.redirect.RedirectAction;
 import org.pac4j.core.util.CommonHelper;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @ProjectName: vue-cas-shiro-client
@@ -17,6 +20,10 @@ import org.pac4j.core.util.CommonHelper;
  * @Version: 1.0
  */
 public class CasClient extends org.pac4j.cas.client.CasClient {
+
+    @Value("${cas.server.url}")
+    private String casServerUrl;
+
     public CasClient() {
         super();
     }
@@ -48,6 +55,8 @@ public class CasClient extends org.pac4j.cas.client.CasClient {
                 return this.getRedirectActionBuilder().redirect(context);
             } else {
                 return this.getRedirectActionBuilder().redirect(context);
+                /*context.setResponseHeader("ACCESS_URL", casServerUrl+"?service=http://192.168.0.247:8011/redirect?url=http://localhost:8082/");
+                throw HttpAction.forbidden(context);*/
             }
         }
     }
