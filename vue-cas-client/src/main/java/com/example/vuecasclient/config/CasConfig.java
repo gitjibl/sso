@@ -1,6 +1,6 @@
-package com.example.casclient.config;
+package com.example.vuecasclient.config;
 
-import org.jasig.cas.client.authentication.AuthenticationFilter;
+import com.example.vuecasclient.filter.MyAuthenticationFilter;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.jasig.cas.client.util.AssertionThreadLocalFilter;
@@ -11,38 +11,42 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
-/**
- * @ProjectName: cas-client
- * @Package: com.example.casclient.config
- * @ClassName: CasCustomConfig
- * @Author: jibl
- * @Description:
- * @Date: 2021/4/19 17:27
- * @Version: 1.0
- */
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Configuration
-@Component
-public class CasCustomConfig {
+public class CasConfig {
 
     @Autowired
-    SpringCasAutoconfig autoconfig;
+    private CasProperties casProperties;
 
-    private static boolean casEnabled = true;
-
-    public CasCustomConfig() {
+    public CasConfig() {
     }
 
+//    @Bean
+//    public CookieSerializer httpSessionIdResolver() {
+//        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+//        cookieSerializer.setUseHttpOnlyCookie(false);
+//        cookieSerializer.setSameSite("None");
+//        cookieSerializer.setCookiePath("/");
+//        cookieSerializer.setUseSecureCookie(true);
+//        return cookieSerializer;
+//    }
+
     @Bean
-    public SpringCasAutoconfig getSpringCasAutoconfig() {
-        return new SpringCasAutoconfig();
+    public CasProperties getCasProperties()
+    {
+        return new CasProperties();
     }
 
     @Bean
     public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener() {
         ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> listener = new ServletListenerRegistrationBean<SingleSignOutHttpSessionListener>();
-        listener.setEnabled(casEnabled);
+        listener.setEnabled(casProperties.getEnable());
         listener.setListener(new SingleSignOutHttpSessionListener());
         listener.setOrder(1);
         return listener;
@@ -57,13 +61,9 @@ public class CasCustomConfig {
     public FilterRegistrationBean singleSignOutFilter() {
         FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
         filterRegistration.setFilter(new SingleSignOutFilter());
-        filterRegistration.setEnabled(casEnabled);
-        if (autoconfig.getSignOutFilters().size() > 0) {
-            filterRegistration.setUrlPatterns(autoconfig.getSignOutFilters());
-        } else {
-            filterRegistration.addUrlPatterns("/*");
-        }
-        filterRegistration.addInitParameter("casServerUrlPrefix", autoconfig.getCasServerUrlPrefix());
+        filterRegistration.setEnabled(casProperties.getEnable());
+        filterRegistration.addUrlPatterns("/*");
+        filterRegistration.addInitParameter("casServerUrlPrefix", casProperties.getServerUrlPrefix());
         filterRegistration.setOrder(3);
         return filterRegistration;
     }
@@ -75,23 +75,19 @@ public class CasCustomConfig {
      */
     @Bean
     public FilterRegistrationBean authenticationFilter() {
-        FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
-        filterRegistration.setFilter(new AuthenticationFilter());
-        filterRegistration.setEnabled(casEnabled);
-        if (autoconfig.getAuthFilters().size() > 0) {
-            filterRegistration.setUrlPatterns(autoconfig.getAuthFilters());
-        } else {
-            filterRegistration.addUrlPatterns("/*");
-        }
-        if (autoconfig.getIgnoreFilters() != null) {
-            filterRegistration.addInitParameter("ignorePattern", autoconfig.getIgnoreFilters());
-        }
-        filterRegistration.addInitParameter("casServerLoginUrl", autoconfig.getCasServerLoginUrl());
-        filterRegistration.addInitParameter("serverName", autoconfig.getServerName());
-        filterRegistration.addInitParameter("useSession", autoconfig.isUseSession() ? "true" : "false");
-        filterRegistration.addInitParameter("redirectAfterValidation", autoconfig.isRedirectAfterValidation() ? "true" : "false");
-        filterRegistration.setOrder(4);
-        return filterRegistration;
+        FilterRegistrationBean authenticationFilter = new FilterRegistrationBean();
+        authenticationFilter.setFilter(new MyAuthenticationFilter());
+        authenticationFilter.addUrlPatterns("/*");
+        Map<String, String> initParameters = new HashMap<String, String>();
+        initParameters.put("ignorePattern", casProperties.getIgnorePattern());
+        initParameters.put("casServerLoginUrl", casProperties.getServerLoginUrl());
+        initParameters.put("serverName", casProperties.getClientHostUrl());
+        authenticationFilter.setInitParameters(initParameters);
+        authenticationFilter.setOrder(2);
+        List<String> urlPatterns = new ArrayList<String>();
+        // 设置匹配的url
+        authenticationFilter.setUrlPatterns(urlPatterns);
+        return authenticationFilter;
     }
 
     /**
@@ -103,28 +99,24 @@ public class CasCustomConfig {
     public FilterRegistrationBean cas30ProxyReceivingTicketValidationFilter() {
         FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
         filterRegistration.setFilter(new Cas30ProxyReceivingTicketValidationFilter());
-        filterRegistration.setEnabled(casEnabled);
-        if (autoconfig.getValidateFilters().size() > 0) {
-            filterRegistration.setUrlPatterns(autoconfig.getValidateFilters());
-        } else {
-            filterRegistration.addUrlPatterns("/*");
-        }
-        filterRegistration.addInitParameter("casServerUrlPrefix", autoconfig.getCasServerUrlPrefix());
-        filterRegistration.addInitParameter("serverName", autoconfig.getServerName());
+        filterRegistration.setEnabled(casProperties.getEnable());
+        filterRegistration.addUrlPatterns("/*");
+        filterRegistration.addInitParameter("casServerUrlPrefix", casProperties.getServerUrlPrefix());
+        filterRegistration.addInitParameter("serverName", casProperties.getClientHostUrl());
         filterRegistration.setOrder(5);
         return filterRegistration;
     }
 
+    /**
+     * request wraper过滤器
+     * @return
+     */
     @Bean
     public FilterRegistrationBean httpServletRequestWrapperFilter() {
         FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
         filterRegistration.setFilter(new HttpServletRequestWrapperFilter());
         filterRegistration.setEnabled(true);
-        if (autoconfig.getRequestWrapperFilters().size() > 0) {
-            filterRegistration.setUrlPatterns(autoconfig.getRequestWrapperFilters());
-        } else {
-            filterRegistration.addUrlPatterns("/*");
-        }
+        filterRegistration.addUrlPatterns("/*");
         filterRegistration.setOrder(6);
         return filterRegistration;
     }
@@ -141,11 +133,7 @@ public class CasCustomConfig {
         FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
         filterRegistration.setFilter(new AssertionThreadLocalFilter());
         filterRegistration.setEnabled(true);
-        if (autoconfig.getAssertionFilters().size() > 0) {
-            filterRegistration.setUrlPatterns(autoconfig.getAssertionFilters());
-        } else {
-            filterRegistration.addUrlPatterns("/*");
-        }
+        filterRegistration.addUrlPatterns("/*");
         filterRegistration.setOrder(7);
         return filterRegistration;
     }

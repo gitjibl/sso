@@ -1,5 +1,7 @@
 package net.sso.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.CircleCaptcha;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import net.sso.utils.KaptchaCodeUtils;
@@ -33,7 +35,7 @@ public class CaptchaController {
      * @param response
      * @throws Exception
      */
-    @GetMapping(value = "/kaptcha", produces = "image/png")
+    @GetMapping(value = "/kaptcha2", produces = "image/png")
     public void kaptcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         byte[] captchaChallengeAsJpeg = null;
         DefaultKaptcha captchaProducer = KaptchaCodeUtils.getDefaultKaptcha();
@@ -71,6 +73,31 @@ public class CaptchaController {
         }
     }
 
+    @RequestMapping(value = "/kaptcha", produces = "image/png")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //定义图形验证码的长、宽、验证码字符数、干扰元素个数
+        CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(110, 40, 4, 10);
+        OutputStream out = null;
+        try {
+            response.setHeader("Cache-Control", "no-store");
+            response.setContentType("image/png");
+            out = response.getOutputStream();
+            String code = captcha.getCode();
+            request.getSession().setAttribute("kaptcha_code", code);
+            captcha.write(out);
+            out.flush();
+        } catch (IOException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+
+        //验证图形验证码的有效性，返回boolean值
+        captcha.verify("1234");
+    }
     /**
      * 用于前端ajax校验
      */

@@ -2,8 +2,8 @@
 {
   "@class" : "org.apereo.cas.services.RegexRegisteredService",
   "serviceId" : "^(http)://192.168.0.113:8011.*",
-  "name" : "web",
-  "id" : 10000002,
+  "name" : "WEB",
+  "id" : 1002,
   "evaluationOrder" : 10,
   "accessStrategy" : {
     "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",

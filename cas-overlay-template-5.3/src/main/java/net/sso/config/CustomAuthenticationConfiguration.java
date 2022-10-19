@@ -22,7 +22,7 @@ public class CustomAuthenticationConfiguration implements AuthenticationEventExe
     private CasConfigurationProperties casProperties;
 
     @Autowired
-    @Qualifier("servicesManager")
+    @Qualifier(value = "servicesManager")
     private ServicesManager servicesManager;
 
 

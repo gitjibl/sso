@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
-    <artifactId>springboot-cas</artifactId>
+    <artifactId>vue-cas-client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-cas</name>
-    <description>springboot-cas</description>
+    <name>vue-cas-client</name>
+    <description>vue-cas-client</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -26,6 +26,7 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -40,11 +41,17 @@
             <version>3.5.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-integration-tomcat-common</artifactId>
-            <version>3.3.3</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.session</groupId>-->
+<!--            <artifactId>spring-session-data-redis</artifactId>-->
+<!--        </dependency>-->
+
+
+        <!--redis依赖配置-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -94,7 +101,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.7.RELEASE</version>
                 <configuration>
-                    <mainClass>com.example.springbootcas.SpringbootCasApplication</mainClass>
+                    <mainClass>com.example.vuecasclient.VueCasClientApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -1,15 +1,13 @@
-package com.example.demo;
+package com.example.springbootcas;
 
-import net.unicon.cas.client.configuration.EnableCasClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@EnableCasClient
-public class DemoApplication {
+public class SpringbootCasApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(SpringbootCasApplication.class, args);
     }
 
 }

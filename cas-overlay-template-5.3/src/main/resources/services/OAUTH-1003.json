@@ -6,7 +6,7 @@
   "bypassApprovalPrompt": false,
   "generateRefreshToken": false,
   "name" : "OAuthService",
-  "id" : 1002,
+  "id" : 1003,
   "attributeReleasePolicy" : {
     "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
   }

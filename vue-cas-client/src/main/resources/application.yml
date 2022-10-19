@@ -1,0 +1,31 @@
+# 应用名称
+spring:
+  application:
+    name=vue-cas-client: vue-cas-client
+#  redis:
+#    host: localhost # Redis服务器地址
+#    database: 0 # Redis数据库索引（默认为0）
+#    port: 6379 # Redis服务器连接端口
+#    password: # Redis服务器连接密码（默认为空）
+#    timeout: 3000ms # 连接超时时间（毫秒）
+server:
+  port: 8012
+cas:
+  enable: true
+  #后端服务地址(回调地址)
+  client-host-url: http://192.168.0.113:8012/
+  #cas认证中心地址
+  server-url-prefix: http://192.168.0.113:8089/cas
+  #cas认证中心登录地址
+  server-login-url: http://192.168.0.113:8089/cas/login
+#  #后端服务地址(回调地址)
+#  client-host-url: http://192.168.0.113:8012/
+#  #cas认证中心地址
+#  server-url-prefix: https://192.168.0.113:8443/cas
+#  #cas认证中心登录地址
+#  server-login-url: https://192.168.0.113:8443/cas/login
+  #cas不拦截
+  ignore-pattern: (/file/*)|(/js)|(/test/*)
+
+
+

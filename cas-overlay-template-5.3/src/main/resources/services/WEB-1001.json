@@ -1,9 +1,9 @@
 // json 配置 name-id.json
 {
   "@class" : "org.apereo.cas.services.RegexRegisteredService",
-  "serviceId" : "^(http)://192.168.0.113:8010.*",
-  "name" : "web",
-  "id" : 10000001,
+  "serviceId" : "^(https|http|imaps)://.*",
+  "name" : "WEB",
+  "id" : 1001,
   "evaluationOrder" : 10,
   "accessStrategy" : {
     "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
