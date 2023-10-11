@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.jasig.cas.client.authentication.*;
@@ -126,6 +128,20 @@ public class MyAuthenticationFilter extends AbstractCasFilter {
         System.out.println("Authentication id  "+id);
 
 //        response.setHeader("Set-Cookie", "JSESSIONID="+id+";SameSite=None;Secure");
+
+        Collection<String> headers = response.getHeaders("Set-Cookie");
+        boolean firstHeader = true;
+        Iterator var8 = headers.iterator();
+
+        while(var8.hasNext()) {
+            String header = (String)var8.next();
+            if (firstHeader) {
+                response.setHeader("Set-Cookie", String.format("%s; %s", header, "SameSite=None"));
+                firstHeader = false;
+            } else {
+                response.addHeader("Set-Cookie", String.format("%s; %s", header, "SameSite=None"));
+            }
+        }
 
         if (isRequestUrlExcluded(request)) {
             logger.debug("Request is ignored.");
